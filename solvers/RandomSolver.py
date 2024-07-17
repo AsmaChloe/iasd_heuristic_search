@@ -10,11 +10,11 @@ class RandomSolver:
     possible_moves = []
     if self.robot_row > 0 and self.grid.grid_data[self.robot_row - 1][self.robot_col] != 'obstacle':  # Up
         possible_moves.append((-1, 0, 'UP'))
-    if self.robot_row < self.grid.rows - 1 and self.grid.grid_data[self.robot_row + 1][self.robot_col] != 'obstacle':  # Down
+    if self.robot_row < self.grid.window.rows - 1 and self.grid.grid_data[self.robot_row + 1][self.robot_col] != 'obstacle':  # Down
         possible_moves.append((1, 0, 'DOWN'))
     if self.robot_col > 0 and self.grid.grid_data[self.robot_row][self.robot_col - 1] != 'obstacle':  # Left
         possible_moves.append((0, -1, 'LEFT'))
-    if self.robot_col < self.grid.cols - 1 and self.grid.grid_data[self.robot_row][self.robot_col + 1] != 'obstacle':  # Right
+    if self.robot_col < self.grid.window.cols - 1 and self.grid.grid_data[self.robot_row][self.robot_col + 1] != 'obstacle':  # Right
         possible_moves.append((0, 1, 'RIGHT'))
 
     output = None

@@ -25,6 +25,10 @@ class Environment:
         self.place_obstacles()
         self.place_robots_and_destinations()
 
+        self.window.draw_grid(self.grid_data)
+        # Start moving robots
+        self.move_robots()
+
     def place_obstacles(self):
         num_obstacles = int(self.window.rows * self.window.cols *
                             0.2)  # 20% de la taille de la grille en obstacles
