@@ -1,12 +1,6 @@
-from enum import Enum
 import random
-from solvers.DijkstraSolver import DijkstraSolver
-from solvers.RandomSolver import RandomSolver
 
-
-class Solver(Enum):
-    RANDOM = RandomSolver
-    DIJKSTRA = DijkstraSolver
+from solvers.SolverTypeEnum import SolverTypeEnum
 
 class Environment:
 
@@ -72,14 +66,14 @@ class Environment:
             dest_row, dest_col = self.destination_positions[i]
 
             # Solve by using the solver class
-            solver = self.solver_class.value(self, robot_row, robot_col, (dest_row, dest_col))
+            solver = self.solver_class.value(self, (robot_row, robot_col), (dest_row, dest_col))
 
             move_row, move_col, direction = None, None, None
             
-            if self.solver_class == Solver.RANDOM :
+            if self.solver_class == SolverTypeEnum.RANDOM :
                 move_row, move_col, direction = solver.solve()
             
-            elif self.solver_class == Solver.DIJKSTRA :
+            elif self.solver_class == SolverTypeEnum.DIJKSTRA :
                 if self.dijkstra_step == 0 :
                     self.optimal_path = solver.solve()
                 move_row, move_col = self.optimal_path[self.dijkstra_step]

@@ -1,20 +1,14 @@
-POSSIBLE_MOVES = [
-    (-1, 0, 'UP'),
-    (1, 0, 'DOWN'),
-    (0, -1, 'LEFT'),
-    (0, 1, 'RIGHT')
-]
+from solvers.Solver import Solver, POSSIBLE_MOVES
 
-class DijkstraSolver:
-    def __init__(self, environment, robot_row, robot_col, dest_pos):
-        self.environment = environment
+class DijkstraSolver(Solver):
+    def __init__(self, environment, robot_pos, dest_pos):
+        Solver.__init__(self, environment, robot_pos, dest_pos)
+        
         self.distances = [[ float('inf') for _ in range(self.environment.window.cols)] for _ in range(self.environment.window.rows)]
         self.previous_step = [[ None for _ in range(self.environment.window.cols)] for _ in range(self.environment.window.rows)]
-        self.robot_pos = (robot_row, robot_col)
-        self.dest_pos = dest_pos
 
 
-        self.distances[robot_row][robot_col] = 0
+        self.distances[self.robot_pos[0]][self.robot_pos[1]] = 0
 
     def solve(self):
         queue = [self.robot_pos]
