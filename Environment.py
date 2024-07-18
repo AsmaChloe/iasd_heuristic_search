@@ -1,6 +1,5 @@
 from enum import Enum
 import random
-from typing import Optional
 from solvers.DijkstraSolver import DijkstraSolver
 from solvers.RandomSolver import RandomSolver
 
@@ -73,23 +72,22 @@ class Environment:
             dest_row, dest_col = self.destination_positions[i]
 
             # Solve by using the solver class
-            solver = self.solver_class.value(self, robot_row, robot_col)
+            solver = self.solver_class.value(self, robot_row, robot_col, (dest_row, dest_col))
 
             move_row, move_col, direction = None, None, None
+            
             if self.solver_class == Solver.RANDOM :
                 move_row, move_col, direction = solver.solve()
+            
             elif self.solver_class == Solver.DIJKSTRA :
                 if self.dijkstra_step == 0 :
                     self.optimal_path = solver.solve()
-                    print(f"{self.optimal_path}")
-                move_row, move_col, direction = self.optimal_path[self.dijkstra_step]
+                move_row, move_col = self.optimal_path[self.dijkstra_step]
                 self.dijkstra_step+=1
                 
             self.grid_data[robot_row][robot_col] = 'empty'
-            self.robot_positions[i] = (robot_row + move_row,
-                                       robot_col + move_col)
-            self.grid_data[robot_row + move_row][robot_col +
-                                                 move_col] = 'robot'
+            self.robot_positions[i] = (move_row, move_col)
+            self.grid_data[move_row][move_col] = 'robot'
 
             #Check if it has reached its destination
             if self.robot_positions[i] == self.destination_positions[i]:
@@ -101,7 +99,7 @@ class Environment:
         if all(self.robot_found_destination):
             print("All robots reached their destination!")
         else:
-            self.window.root.after(300, self.move_robots)
+            self.window.root.after(100, self.move_robots)
 
     def launch(self):
         self.window.root.mainloop()

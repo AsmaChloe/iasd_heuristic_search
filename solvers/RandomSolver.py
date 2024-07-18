@@ -1,25 +1,32 @@
 import random
 
+POSSIBLE_MOVES = [
+    (-1, 0, 'UP'),
+    (1, 0, 'DOWN'),
+    (0, -1, 'LEFT'),
+    (0, 1, 'RIGHT')
+]
+
 class RandomSolver:
-  def __init__(self, grid, robot_row, robot_col):
+  def __init__(self, grid, robot_row, robot_col, dest_pos = None):
     self.grid = grid
     self.robot_row = robot_row
     self.robot_col = robot_col
 
   def solve(self):
-    possible_moves = []
-    if self.robot_row > 0 and self.grid.grid_data[self.robot_row - 1][self.robot_col] != 'obstacle':  # Up
-        possible_moves.append((-1, 0, 'UP'))
-    if self.robot_row < self.grid.window.rows - 1 and self.grid.grid_data[self.robot_row + 1][self.robot_col] != 'obstacle':  # Down
-        possible_moves.append((1, 0, 'DOWN'))
-    if self.robot_col > 0 and self.grid.grid_data[self.robot_row][self.robot_col - 1] != 'obstacle':  # Left
-        possible_moves.append((0, -1, 'LEFT'))
-    if self.robot_col < self.grid.window.cols - 1 and self.grid.grid_data[self.robot_row][self.robot_col + 1] != 'obstacle':  # Right
-        possible_moves.append((0, 1, 'RIGHT'))
+    potential_poss = []
+
+    for move in POSSIBLE_MOVES :
+        potential_pos = (self.robot_row+move[0], self.robot_col+move[1], move[2])
+        
+        if potential_pos[0] >= 0 and potential_pos[0]<self.grid.window.rows \
+        and potential_pos[1] >= 0 and potential_pos[1]<self.grid.window.cols \
+        and self.grid.grid_data[potential_pos[0]][potential_pos[1]] != 'obstacle':
+            potential_poss.append(potential_pos)
 
     output = None
-    if possible_moves:
-      move_row, move_col, direction = random.choice(possible_moves)
+    if len(potential_poss)>0:
+      move_row, move_col, direction = random.choice(potential_poss)
       output = (move_row, move_col, direction)
 
     return output

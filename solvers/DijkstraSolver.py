@@ -1,5 +1,3 @@
-import random
-
 POSSIBLE_MOVES = [
     (-1, 0, 'UP'),
     (1, 0, 'DOWN'),
@@ -7,76 +5,43 @@ POSSIBLE_MOVES = [
     (0, 1, 'RIGHT')
 ]
 
-class Node:
-    def __init__(self, g, robot_position, parent=None, move=None):
-        self.g = g
-        self.robot_position = robot_position
-        self.parent = parent
-        self.move = move
-        self.children = []
-
-    def __repr__(self) -> str:
-        return f"Node(g={self.g}, robot_position={self.robot_position}, parent={self.parent}"
-
 class DijkstraSolver:
-    def __init__(self, environment, robot_row, robot_col):
+    def __init__(self, environment, robot_row, robot_col, dest_pos):
         self.environment = environment
-        self.start_node = Node(0, (robot_row, robot_col))
-        self.destination = environment.destination_positions[environment.robot_positions.index((robot_row, robot_col))]
-        self.leaves = []
-        self.visited = set()
+        self.distances = [[ float('inf') for _ in range(self.environment.window.cols)] for _ in range(self.environment.window.rows)]
+        self.previous_step = [[ None for _ in range(self.environment.window.cols)] for _ in range(self.environment.window.rows)]
+        self.robot_pos = (robot_row, robot_col)
+        self.dest_pos = dest_pos
 
-    def expand(self):
-        queue = [self.start_node]
-        self.visited.add(self.start_node.robot_position)
 
-        while queue:
-            current_node = queue.pop()
-
-            if current_node.robot_position == self.destination:
-                print(f"\tFound leaf.")
-                self.leaves.append(current_node)
-            else:
-                print(f"\tExpanding node ...")
-                for move_row, move_col, direction in POSSIBLE_MOVES:
-                    new_row = current_node.robot_position[0] + move_row
-                    new_col = current_node.robot_position[1] + move_col
-                    new_position = (new_row, new_col)
-
-                    if 0 <= new_row < self.environment.window.rows \
-                            and 0 <= new_col < self.environment.window.cols \
-                            and self.environment.grid_data[new_row][new_col] != 'obstacle' \
-                            and new_position not in self.visited:
-                        child_node = Node(current_node.g + 1,
-                                          new_position,
-                                          parent=current_node,
-                                          move=(move_row, move_col, direction)
-                                          )
-                        # print(f"\tExpanding node {current_node} with move {child_node.move}")
-                        current_node.children.append(child_node)
-                        queue.append(child_node)
-                        self.visited.add(new_position)
-            print(f"\n")
+        self.distances[robot_row][robot_col] = 0
 
     def solve(self):
-        self.expand()
-        print(f"{self.leaves}=")
+        queue = [self.robot_pos]
 
-        if not self.leaves:
-            return None
+        while queue :
+            current_pos = queue.pop()
 
-        min_g = min(node.g for node in self.leaves)
-        print(f"{min_g}")
-        candidates_leaves = [node for node in self.leaves if node.g == min_g]
-        print(f"{candidates_leaves=}")
-        shallowest_leave = random.choice(candidates_leaves)
-        path = self.retrace_path(shallowest_leave)
-        return path
+            for move in POSSIBLE_MOVES :
+                potential_pos = (current_pos[0]+move[0], current_pos[1]+move[1])
 
-    def retrace_path(self, node):
-        path = []
-        while node.parent is not None:
-            path.append(node.move)
-            node = node.parent
-        path.reverse()
-        return path
+                #Check if position is valid
+                if potential_pos[0] >=0 and potential_pos[0]<self.environment.window.rows \
+                    and potential_pos[1]>=0 and potential_pos[1]<self.environment.window.cols \
+                    and self.environment.grid_data[potential_pos[0]][potential_pos[1]] != 'obstacle' :
+
+                    distance = self.distances[current_pos[0]][current_pos[1]] + 1
+                    if distance < self.distances[potential_pos[0]][potential_pos[1]]:
+                        self.distances[potential_pos[0]][potential_pos[1]] = distance
+                        self.previous_step[potential_pos[0]][potential_pos[1]] = current_pos
+
+                        queue.append(potential_pos)
+
+        path = [self.dest_pos]
+        current_pos = self.dest_pos
+
+        while self.previous_step[current_pos[0]][current_pos[1]] :
+            path.append(self.previous_step[current_pos[0]][current_pos[1]])
+            current_pos = self.previous_step[current_pos[0]][current_pos[1]]
+
+        return list(reversed(path))
