@@ -73,9 +73,10 @@ class Environment:
             if self.solver_class == SolverTypeEnum.RANDOM :
                 move_row, move_col, direction = solver.solve()
             
-            elif self.solver_class == SolverTypeEnum.DIJKSTRA :
+            else : #Dijkstra & A*
                 if self.dijkstra_step == 0 :
                     self.optimal_path = solver.solve()
+                    print(self.optimal_path)
                 move_row, move_col = self.optimal_path[self.dijkstra_step]
                 self.dijkstra_step+=1
                 
