@@ -14,7 +14,7 @@ class DijkstraSolver(Solver):
         queue = [self.robot_pos]
 
         while queue :
-            current_pos = queue.pop()
+            current_pos = queue.pop(0)
 
             for move in POSSIBLE_MOVES :
                 potential_pos = (current_pos[0]+move[0], current_pos[1]+move[1])
