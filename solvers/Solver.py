@@ -12,6 +12,7 @@ class Solver:
     self.environment = environment
     self.dest_pos = dest_pos
     self.robot_pos = robot_pos
+    self.compute_time = None
 
   @abstractmethod
   def solve(self):

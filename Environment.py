@@ -4,7 +4,7 @@ from solvers.SolverTypeEnum import SolverTypeEnum
 
 class Environment:
 
-    def __init__(self, window, solver_class, num_robots = 1, obstacle_density=0.2):
+    def __init__(self, window, solver_class, num_robots = 1, obstacle_density=None):
         self.window = window
 
         self.solver_class = solver_class
@@ -20,6 +20,8 @@ class Environment:
         self.destination_positions = []
         self.robot_found_destination = []
 
+        if obstacle_density is None:
+            obstacle_density = self.window.rows / 100.0
         self.place_obstacles(obstacle_density)
         self.place_robots_and_destinations()
 
