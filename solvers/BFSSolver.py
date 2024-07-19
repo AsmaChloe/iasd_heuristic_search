@@ -1,4 +1,5 @@
 from solvers.Solver import Solver, POSSIBLE_MOVES
+import time
 
 
 class BFSSolver(Solver):
@@ -13,12 +14,15 @@ class BFSSolver(Solver):
 
     def solve(self):
         queue = [self.robot_pos]
+        start_time = time.time_ns()
 
         while queue:
             current_pos = queue.pop(0)
 
-            # End
+            # End - Retracing path
             if current_pos == self.dest_pos:
+                self.compute_time = time.time_ns() - start_time
+
                 path = [self.dest_pos]
                 current_pos = self.dest_pos
 
@@ -26,7 +30,7 @@ class BFSSolver(Solver):
                     path.append(current_pos)
                     current_pos = self.parent.get(current_pos)
 
-                return list(reversed(path))
+                return list(reversed(path)), self.compute_time
 
             self.visited[current_pos[0]][current_pos[1]] = True
 
@@ -42,4 +46,4 @@ class BFSSolver(Solver):
 
                     queue.append(potential_pos)
                     self.parent[potential_pos] = current_pos
-        return None
+        return None, None
