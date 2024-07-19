@@ -76,6 +76,9 @@ class Environment:
             else :
                 if self.algorithm_step == 0 :
                     self.optimal_path, self.compute_time = solver.solve()
+                    if self.optimal_path is None:
+                        print("No path found")
+                        return
                     print(f"Compute time: {self.compute_time} ns")
                 move_row, move_col = self.optimal_path[self.algorithm_step]
                 self.algorithm_step+=1
