@@ -4,12 +4,13 @@ from solvers.SolverTypeEnum import SolverTypeEnum
 
 class Environment:
 
-    def __init__(self, window, solver_class, num_robots):
+    def __init__(self, window, solver_class, num_robots = 1, obstacle_density=0.2):
         self.window = window
 
         self.solver_class = solver_class
         self.optimal_path = []
-        self.dijkstra_step = 0
+        self.algorithm_step = 0
+        self.compute_time = None
         self.num_robots = num_robots
 
         self.grid_data = [['empty' for _ in range(self.window.cols)]
@@ -19,16 +20,15 @@ class Environment:
         self.destination_positions = []
         self.robot_found_destination = []
 
-        self.place_obstacles()
+        self.place_obstacles(obstacle_density)
         self.place_robots_and_destinations()
 
         self.window.draw_grid(self.grid_data)
         # Start moving robots
         self.move_robots()
 
-    def place_obstacles(self):
-        num_obstacles = int(self.window.rows * self.window.cols *
-                            0.2)  # 20% de la taille de la grille en obstacles
+    def place_obstacles(self, obstacle_density=0.2):
+        num_obstacles = int(self.window.rows * self.window.cols * obstacle_density)
 
         for _ in range(num_obstacles):
             while True:
@@ -73,12 +73,12 @@ class Environment:
             if self.solver_class == SolverTypeEnum.RANDOM :
                 move_row, move_col, direction = solver.solve()
             
-            else : #Dijkstra & A*
-                if self.dijkstra_step == 0 :
-                    self.optimal_path = solver.solve()
-                    print(self.optimal_path)
-                move_row, move_col = self.optimal_path[self.dijkstra_step]
-                self.dijkstra_step+=1
+            else :
+                if self.algorithm_step == 0 :
+                    self.optimal_path, self.compute_time = solver.solve()
+                    print(f"Compute time: {self.compute_time} ns")
+                move_row, move_col = self.optimal_path[self.algorithm_step]
+                self.algorithm_step+=1
                 
             self.grid_data[robot_row][robot_col] = 'empty'
             self.robot_positions[i] = (move_row, move_col)
