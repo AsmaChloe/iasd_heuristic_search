@@ -1,44 +1,55 @@
 from solvers.Solver import Solver, POSSIBLE_MOVES
+import time
+
 
 class AStarSolver(Solver):
+
     def __init__(self, environment, robot_pos, dest_pos):
         Solver.__init__(self, environment, robot_pos, dest_pos)
 
-        self.distances = [[ float('inf') for _ in range(self.environment.window.cols)] for _ in range(self.environment.window.rows)]
-        self.previous_step = [[ None for _ in range(self.environment.window.cols)] for _ in range(self.environment.window.rows)]
-
-
-        self.distances[self.robot_pos[0]][self.robot_pos[1]] = 0 + self.heuristic(self.robot_pos)
+        self.parent = {}
+        self.g_cost = {self.robot_pos: 0}
+        self.visited = [[False for _ in range(self.environment.window.cols)] for _ in
+                        range(self.environment.window.rows)]
 
     def heuristic(self, pos):
         return abs(pos[0] - self.dest_pos[0]) + abs(pos[1] - self.dest_pos[1])
 
     def solve(self):
-        queue = [self.robot_pos]
+        queue = []
+        queue.append((self.heuristic(self.robot_pos), self.robot_pos))
+        start_time = time.time_ns()
 
-        while queue :
-            current_pos = queue.pop(0)
+        while queue:
+            _, current_pos = queue.pop(0)
 
-            for move in POSSIBLE_MOVES :
-                potential_pos = (current_pos[0]+move[0], current_pos[1]+move[1])
+            # End - Retracing path
+            if current_pos == self.dest_pos:
+                self.compute_time = time.time_ns() - start_time
 
-                #Check if position is valid
-                if potential_pos[0] >=0 and potential_pos[0]<self.environment.window.rows \
-                    and potential_pos[1]>=0 and potential_pos[1]<self.environment.window.cols \
-                    and self.environment.grid_data[potential_pos[0]][potential_pos[1]] != 'obstacle' :
+                path = [self.dest_pos]
+                while current_pos is not None:
+                    path.append(current_pos)
+                    current_pos = self.parent.get(current_pos)
+                return list(reversed(path)), self.compute_time
 
-                    distance = self.distances[current_pos[0]][current_pos[1]] + self.heuristic(current_pos)
-                    if distance < self.distances[potential_pos[0]][potential_pos[1]]:
-                        self.distances[potential_pos[0]][potential_pos[1]] = distance
-                        self.previous_step[potential_pos[0]][potential_pos[1]] = current_pos
+            self.visited[current_pos[0]][current_pos[1]] = True
 
-                        queue.append(potential_pos)
+            for move in POSSIBLE_MOVES:
+                potential_pos = (current_pos[0] + move[0], current_pos[1] + move[1])
 
-        path = [self.dest_pos]
-        current_pos = self.dest_pos
+                # If valid position
+                if 0 <= potential_pos[0] < self.environment.window.rows and \
+                        0 <= potential_pos[1] < self.environment.window.cols and \
+                        self.environment.grid_data[potential_pos[0]][potential_pos[1]] != 'obstacle' and \
+                        not self.visited[potential_pos[0]][potential_pos[1]]:
 
-        while self.previous_step[current_pos[0]][current_pos[1]] :
-            path.append(self.previous_step[current_pos[0]][current_pos[1]])
-            current_pos = self.previous_step[current_pos[0]][current_pos[1]]
+                    tentative_g_cost = self.g_cost[current_pos] + 1
 
-        return list(reversed(path))
+                    if potential_pos not in self.g_cost or tentative_g_cost < self.g_cost[potential_pos]:
+                        self.g_cost[potential_pos] = tentative_g_cost
+                        f_cost = tentative_g_cost + self.heuristic(potential_pos)
+                        queue.append((f_cost, potential_pos))
+                        self.parent[potential_pos] = current_pos
+
+        return None, None
