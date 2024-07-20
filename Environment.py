@@ -67,25 +67,52 @@ class Environment:
 
             dest_row, dest_col = self.destination_positions[i]
 
-            # Solve by using the solver class
-            solver = self.solver_class.value(self, (robot_row, robot_col), (dest_row, dest_col))
-
             move_row, move_col, direction = None, None, None
-            
-            if self.solver_class == SolverTypeEnum.RANDOM :
-                move_row, move_col, direction = solver.solve()
-            
-            else :
+
+            if self.solver_class == SolverTypeEnum.PriorityBased :
+                agents = [(robot_pos, dest_pos, i+1) for i, (robot_pos, dest_pos) in enumerate(zip(self.robot_positions, self.destination_positions))]
+                solver = self.solver_class.value(self, agents)
+
+                # Change variables bc of MAPF
                 if self.algorithm_step == 0 :
-                    self.optimal_path, self.compute_time = solver.solve()
-                    if self.optimal_path is None:
-                        print("No path found")
-                        return
-                    print(f"Compute time: {self.compute_time} ns")
-                move_row, move_col = self.optimal_path[self.algorithm_step]
-                self.algorithm_step+=1
+                    self.algorithm_step = [0 for _ in range(self.num_robots)]
+                    self.optimal_path = [None for _ in range(self.num_robots)]
+
+
+                if type(self.algorithm_step) == list :
+                    # If first time, solve for all robots
+                    if all([i == 0 for i in self.algorithm_step]) :
+                        self.optimal_path = solver.solve()
+                        # print(f"{self.optimal_path=}")
+
+                    move_row, move_col = self.optimal_path[i][self.algorithm_step[i]]
+                    self.algorithm_step[i] += 1
+            else :
+                # Solve by using the solver class
+                solver = self.solver_class.value(self, (robot_row, robot_col), (dest_row, dest_col))
+
+                if self.solver_class == SolverTypeEnum.RANDOM :
+                    move_row, move_col, direction = solver.solve()
+                else :
+                    if self.algorithm_step == 0 :
+                        self.optimal_path, self.compute_time = solver.solve()
+                        if self.optimal_path is None:
+                            print("No path found")
+                            return
+                        print(f"Compute time: {self.compute_time} ns")
+                    move_row, move_col = self.optimal_path[self.algorithm_step]
+                    self.algorithm_step+=1
                 
-            self.grid_data[robot_row][robot_col] = 'empty'
+
+            if (robot_row, robot_col) in self.destination_positions:
+                robot_index = self.destination_positions.index((robot_row, robot_col))
+                # If corresponding destionation was found by its robot
+                if self.robot_found_destination[robot_index]:
+                    self.grid_data[robot_row][robot_col] = 'robot'
+                else :
+                    self.grid_data[robot_row][robot_col] = 'destination'
+            else:
+                self.grid_data[robot_row][robot_col] = 'empty'
             self.robot_positions[i] = (move_row, move_col)
             self.grid_data[move_row][move_col] = 'robot'
 
@@ -99,7 +126,7 @@ class Environment:
         if all(self.robot_found_destination):
             print("All robots reached their destination!")
         else:
-            self.window.root.after(100, self.move_robots)
+            self.window.root.after(600, self.move_robots)
 
     def launch(self):
         self.window.root.mainloop()

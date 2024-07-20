@@ -6,6 +6,7 @@ from solvers.SolverTypeEnum import SolverTypeEnum
 
 if __name__ == "__main__":
     root = tk.Tk()
-    grid_window = GridWindow(root, 30, 30)
-    env = Environment(grid_window, SolverTypeEnum.GreedyBFSSolver, 1)
+    grid_window = GridWindow(root, 10, 10)
+    env = Environment(grid_window, SolverTypeEnum.PriorityBased, 3)
     env.launch()
+

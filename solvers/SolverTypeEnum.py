@@ -5,6 +5,7 @@ from solvers.BFSSolver import BFSSolver
 from solvers.DijkstraSolver import DijkstraSolver
 from solvers.RandomSolver import RandomSolver
 from solvers.GreedyBFSSolver import GreedyBFSSolver
+from solvers.PriorityBasedSolver import PriorityBasedSolver
 
 class SolverTypeEnum(Enum):
     RANDOM = RandomSolver
@@ -12,3 +13,4 @@ class SolverTypeEnum(Enum):
     ASTAR = AStarSolver
     BFS = BFSSolver
     GreedyBFSSolver = GreedyBFSSolver
+    PriorityBased = PriorityBasedSolver
