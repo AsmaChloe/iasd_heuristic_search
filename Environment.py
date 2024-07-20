@@ -69,7 +69,7 @@ class Environment:
 
             move_row, move_col, direction = None, None, None
 
-            if self.solver_class == SolverTypeEnum.PriorityBased :
+            if self.solver_class == SolverTypeEnum.PriorityBased or self.solver_class == SolverTypeEnum.ConflictBaseSolver:
                 agents = [(robot_pos, dest_pos, i+1) for i, (robot_pos, dest_pos) in enumerate(zip(self.robot_positions, self.destination_positions))]
                 solver = self.solver_class.value(self, agents)
 

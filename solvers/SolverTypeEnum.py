@@ -1,5 +1,7 @@
 
 from enum import Enum
+
+from solvers.CBSSolver import CBS
 from solvers.AStarSolver import AStarSolver
 from solvers.BFSSolver import BFSSolver
 from solvers.DijkstraSolver import DijkstraSolver
@@ -14,3 +16,4 @@ class SolverTypeEnum(Enum):
     BFS = BFSSolver
     GreedyBFSSolver = GreedyBFSSolver
     PriorityBased = PriorityBasedSolver
+    ConflictBaseSolver = CBS
