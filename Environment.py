@@ -69,9 +69,9 @@ class Environment:
 
             move_row, move_col, direction = None, None, None
 
-            if self.solver_class == SolverTypeEnum.PriorityBased or self.solver_class == SolverTypeEnum.ConflictBaseSolver:
+            if self.solver_class == SolverTypeEnum.PRIORITY_BASED or self.solver_class == SolverTypeEnum.CONFLICT_BASED:
                 agents = [(robot_pos, dest_pos, i+1) for i, (robot_pos, dest_pos) in enumerate(zip(self.robot_positions, self.destination_positions))]
-                solver = self.solver_class.value(self, agents)
+                solver = self.solver_class.solver_class(self, agents)
 
                 # Change variables bc of MAPF
                 if self.algorithm_step == 0 :
@@ -89,7 +89,7 @@ class Environment:
                     self.algorithm_step[i] += 1
             else :
                 # Solve by using the solver class
-                solver = self.solver_class.value(self, (robot_row, robot_col), (dest_row, dest_col))
+                solver = self.solver_class.solver_class(self, (robot_row, robot_col), (dest_row, dest_col))
 
                 if self.solver_class == SolverTypeEnum.RANDOM :
                     move_row, move_col, direction = solver.solve()

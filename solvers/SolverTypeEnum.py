@@ -10,10 +10,21 @@ from solvers.GreedyBFSSolver import GreedyBFSSolver
 from solvers.PriorityBasedSolver import PriorityBasedSolver
 
 class SolverTypeEnum(Enum):
-    RANDOM = RandomSolver
-    DIJKSTRA = DijkstraSolver
-    ASTAR = AStarSolver
-    BFS = BFSSolver
-    GreedyBFSSolver = GreedyBFSSolver
-    PriorityBased = PriorityBasedSolver
-    ConflictBaseSolver = CBSSolver
+
+    def __new__(cls, *args, **kwargs):
+          value = len(cls.__members__) + 1
+          obj = object.__new__(cls)
+          obj._value_ = value
+          return obj
+
+    def __init__(self, solver_class, agent_limit):
+        self.solver_class = solver_class
+        self.agent_limit = agent_limit
+
+    RANDOM = RandomSolver, "single"
+    DIJKSTRA = DijkstraSolver, "single"
+    ASTAR = AStarSolver, "single"
+    BFS = BFSSolver, "single"
+    GREEDY_BFS = GreedyBFSSolver, "single"
+    PRIORITY_BASED = PriorityBasedSolver, "multiple"
+    CONFLICT_BASED = CBSSolver, "multiple"
