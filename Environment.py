@@ -5,6 +5,8 @@ from solvers.SolverTypeEnum import SolverTypeEnum
 class Environment:
 
     def __init__(self, window, solver_class, num_robots = 1, obstacle_density=None):
+        assert (num_robots == 1 and solver_class.agent_limit == "single") or (num_robots >= 1 and solver_class.agent_limit == "multiple"), "Agent number has to respect Solver agent limit."
+
         self.window = window
 
         self.solver_class = solver_class
