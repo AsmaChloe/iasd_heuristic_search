@@ -1,11 +1,12 @@
-from solvers.Solver import POSSIBLE_MOVES, Solver
+from solvers.parents.SAPFSolver import SAPFSolver
+from solvers.parents.Solver import POSSIBLE_MOVES, Solver
 import random
 
 
-class RandomSolver(Solver):
+class RandomSolver(SAPFSolver):
 
   def __init__(self, environment, robot_pos, dest_pos):
-    Solver.__init__(self, environment, robot_pos, dest_pos)
+    SAPFSolver.__init__(self, environment, robot_pos, dest_pos)
 
   def solve(self):
     potential_poss = []

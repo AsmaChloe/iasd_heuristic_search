@@ -1,10 +1,11 @@
 from solvers.AStarSolver import AStarSolver
+from solvers.parents.MAPFSolver import MAPFSolver
 
-class PriorityBasedSolver:
+
+class PriorityBasedSolver(MAPFSolver):
 
     def __init__(self, environment, agents):
-        self.environment = environment
-        self.agents = agents  # List of tuples (start_pos, dest_pos, priority)
+        MAPFSolver.__init__(self, environment, agents)
         self.agent_paths = []
         self.max_steps = 0
 

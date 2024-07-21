@@ -1,11 +1,12 @@
 import time
 
-from solvers.Solver import Solver, POSSIBLE_MOVES
+from solvers.parents.SAPFSolver import SAPFSolver
+from solvers.parents.Solver import Solver, POSSIBLE_MOVES
 
-class DijkstraSolver(Solver):
+class DijkstraSolver(SAPFSolver):
 
     def __init__(self, environment, robot_pos, dest_pos):
-        Solver.__init__(self, environment, robot_pos, dest_pos)
+        SAPFSolver.__init__(self, environment, robot_pos, dest_pos)
 
         self.parent = {}
         self.g_cost = {self.robot_pos: 0}

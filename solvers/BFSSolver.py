@@ -1,11 +1,12 @@
-from solvers.Solver import Solver, POSSIBLE_MOVES
+from solvers.parents.SAPFSolver import SAPFSolver
+from solvers.parents.Solver import Solver, POSSIBLE_MOVES
 import time
 
 
-class BFSSolver(Solver):
+class BFSSolver(SAPFSolver):
 
     def __init__(self, environment, robot_pos, dest_pos):
-        Solver.__init__(self, environment, robot_pos, dest_pos)
+        SAPFSolver.__init__(self, environment, robot_pos, dest_pos)
 
         self.parent = {}
 

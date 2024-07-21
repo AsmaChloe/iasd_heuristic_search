@@ -1,11 +1,11 @@
-from solvers.Solver import Solver, POSSIBLE_MOVES
+from solvers.parents.Solver import Solver, POSSIBLE_MOVES
 import time
+from solvers.parents.SAPFSolver import SAPFSolver
 
+class AStarSolver(SAPFSolver):
 
-class AStarSolver(Solver):
-
-    def __init__(self, environment, robot_pos, dest_pos):
-        Solver.__init__(self, environment, robot_pos, dest_pos)
+    def __init__(self, environment, robot_pos, dest_pos, constraints=None):
+        SAPFSolver.__init__(self, environment, robot_pos, dest_pos)
 
         self.parent = {}
         self.g_cost = {self.robot_pos: 0}

@@ -7,6 +7,6 @@ from solvers.SolverTypeEnum import SolverTypeEnum
 if __name__ == "__main__":
     root = tk.Tk()
     grid_window = GridWindow(root, 10, 10)
-    env = Environment(grid_window, SolverTypeEnum.ConflictBaseSolver, 5)
+    env = Environment(grid_window, SolverTypeEnum.RANDOM, 1)
     env.launch()
 
