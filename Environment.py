@@ -85,10 +85,12 @@ class Environment:
                     # If first time, solve for all robots
                     if all([i == 0 for i in self.algorithm_step]) :
                         self.optimal_path = solver.solve()
-                        # print(f"{self.optimal_path=}")
 
-                    move_row, move_col = self.optimal_path[i][self.algorithm_step[i]]
-                    self.algorithm_step[i] += 1
+                    if(not self.robot_found_destination[i]) :
+                        move_row, move_col = self.optimal_path[i][self.algorithm_step[i]]
+                        self.algorithm_step[i] += 1
+                    else:
+                        continue
             else :
                 # Solve by using the solver class
                 solver = self.solver_class.solver_class(self, (robot_row, robot_col), (dest_row, dest_col))
