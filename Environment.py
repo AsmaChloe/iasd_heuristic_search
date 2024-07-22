@@ -41,6 +41,7 @@ class Environment:
                 obstacle_col = random.randint(0, self.window.cols - 1)
                 if self.grid_data[obstacle_row][obstacle_col].type == 'empty':
                     self.grid_data[obstacle_row][obstacle_col].type = 'obstacle'
+                    self.grid_data[obstacle_row][obstacle_col].original_type = 'obstacle'
                     break
 
     def place_robots_and_destinations(self):
@@ -60,6 +61,7 @@ class Environment:
                 dest_col = random.randint(0, self.window.cols - 1)
                 if self.grid_data[dest_row][dest_col].type == 'empty':
                     self.grid_data[dest_row][dest_col].type = 'destination'
+                    self.grid_data[dest_row][dest_col].original_type = 'destination'
                     self.destination_positions.append((dest_row, dest_col))
                     break
 
@@ -107,23 +109,19 @@ class Environment:
                         print(f"Compute time: {self.compute_time} ns")
                     move_row, move_col = self.optimal_path[self.algorithm_step]
                     self.algorithm_step+=1
-                
 
-            if (robot_row, robot_col) in self.destination_positions:
-                robot_index = self.destination_positions.index((robot_row, robot_col))
-                # If corresponding destionation was found by its robot
-                if self.robot_found_destination[robot_index]:
-                    self.grid_data[robot_row][robot_col].type = 'robot'
-                else :
-                    self.grid_data[robot_row][robot_col].type = 'destination'
-            else:
-                self.grid_data[robot_row][robot_col].type = 'empty'
+            original_type = self.grid_data[robot_row][robot_col].original_type
+            if self.grid_data[robot_row][robot_col].blocked_state:
+                #Its a destination & corresponding robot has found it
+                original_type = 'robot'
+            self.grid_data[robot_row][robot_col].type = original_type
             self.robot_positions[i] = (move_row, move_col)
             self.grid_data[move_row][move_col].type = 'robot'
 
             #Check if it has reached its destination
             if self.robot_positions[i] == self.destination_positions[i]:
                 self.robot_found_destination[i] = True
+                self.grid_data[move_row][move_col].blocked_state = True
 
         self.window.draw_grid(self.grid_data)
 
