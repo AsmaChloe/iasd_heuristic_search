@@ -5,7 +5,7 @@ from solvers.parents.SAPFSolver import SAPFSolver
 class AStarSolver(SAPFSolver):
 
     def __init__(self, environment, robot_pos, dest_pos, constraints=None):
-        SAPFSolver.__init__(self, environment, robot_pos, dest_pos)
+        SAPFSolver.__init__(self, environment, robot_pos, dest_pos, constraints=None)
 
         self.parent = {}
         self.g_cost = {self.robot_pos: 0}

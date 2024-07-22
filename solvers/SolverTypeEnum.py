@@ -5,9 +5,9 @@ from solvers.CBSSolver import CBSSolver
 from solvers.AStarSolver import AStarSolver
 from solvers.BFSSolver import BFSSolver
 from solvers.DijkstraSolver import DijkstraSolver
+from solvers.PriorityAStarSolver import PriorityAStarSolver
 from solvers.RandomSolver import RandomSolver
 from solvers.GreedyBFSSolver import GreedyBFSSolver
-from solvers.PriorityBasedSolver import PriorityBasedSolver
 
 class SolverTypeEnum(Enum):
 
@@ -26,5 +26,5 @@ class SolverTypeEnum(Enum):
     ASTAR = AStarSolver, "single"
     BFS = BFSSolver, "single"
     GREEDY_BFS = GreedyBFSSolver, "single"
-    PRIORITY_BASED = PriorityBasedSolver, "multiple"
+    PRIORITY_BASED = PriorityAStarSolver, "multiple"
     CONFLICT_BASED = CBSSolver, "multiple"

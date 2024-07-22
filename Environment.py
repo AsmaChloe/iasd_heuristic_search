@@ -84,7 +84,7 @@ class Environment:
 
             if self.solver_class == SolverTypeEnum.PRIORITY_BASED or self.solver_class == SolverTypeEnum.CONFLICT_BASED:
 
-                if not agent.found_destination:
+                if not agent.found_destination and len(agent.optimal_path) != 0:
                     move_row, move_col = agent.optimal_path[agent.algorithm_step]
                     agent.algorithm_step += 1
                 else:
