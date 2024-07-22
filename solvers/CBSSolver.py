@@ -20,7 +20,7 @@ class AStarSolver(SAPFSolver):
     def is_valid(self, pos, time_step):
         if 0 <= pos[0] < self.environment.window.rows and \
            0 <= pos[1] < self.environment.window.cols and \
-           self.environment.grid_data[pos[0]][pos[1]] != 'obstacle':
+           self.environment.grid_data[pos[0]][pos[1]].type != 'obstacle':
             for (t, p, agent_id) in self.constraints:
                 if t == time_step and p == pos:
                     return False

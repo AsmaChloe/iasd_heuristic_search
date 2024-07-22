@@ -1,5 +1,6 @@
 import random
 
+from GridCell import GridCell
 from solvers.SolverTypeEnum import SolverTypeEnum
 
 class Environment:
@@ -15,7 +16,7 @@ class Environment:
         self.compute_time = None
         self.num_robots = num_robots
 
-        self.grid_data = [['empty' for _ in range(self.window.cols)]
+        self.grid_data = [[GridCell() for _ in range(self.window.cols)]
                           for _ in range(self.window.rows)]
 
         self.robot_positions = []
@@ -38,8 +39,8 @@ class Environment:
             while True:
                 obstacle_row = random.randint(0, self.window.rows - 1)
                 obstacle_col = random.randint(0, self.window.cols - 1)
-                if self.grid_data[obstacle_row][obstacle_col] == 'empty':
-                    self.grid_data[obstacle_row][obstacle_col] = 'obstacle'
+                if self.grid_data[obstacle_row][obstacle_col].type == 'empty':
+                    self.grid_data[obstacle_row][obstacle_col].type = 'obstacle'
                     break
 
     def place_robots_and_destinations(self):
@@ -49,16 +50,16 @@ class Environment:
             while True:
                 robot_row = random.randint(0, self.window.rows - 1)
                 robot_col = random.randint(0, self.window.cols - 1)
-                if self.grid_data[robot_row][robot_col] == 'empty':
-                    self.grid_data[robot_row][robot_col] = 'robot'
+                if self.grid_data[robot_row][robot_col].type == 'empty':
+                    self.grid_data[robot_row][robot_col].type = 'robot'
                     self.robot_positions.append((robot_row, robot_col))
                     break
 
             while True:
                 dest_row = random.randint(0, self.window.rows - 1)
                 dest_col = random.randint(0, self.window.cols - 1)
-                if self.grid_data[dest_row][dest_col] == 'empty':
-                    self.grid_data[dest_row][dest_col] = 'destination'
+                if self.grid_data[dest_row][dest_col].type == 'empty':
+                    self.grid_data[dest_row][dest_col].type = 'destination'
                     self.destination_positions.append((dest_row, dest_col))
                     break
 
@@ -112,13 +113,13 @@ class Environment:
                 robot_index = self.destination_positions.index((robot_row, robot_col))
                 # If corresponding destionation was found by its robot
                 if self.robot_found_destination[robot_index]:
-                    self.grid_data[robot_row][robot_col] = 'robot'
+                    self.grid_data[robot_row][robot_col].type = 'robot'
                 else :
-                    self.grid_data[robot_row][robot_col] = 'destination'
+                    self.grid_data[robot_row][robot_col].type = 'destination'
             else:
-                self.grid_data[robot_row][robot_col] = 'empty'
+                self.grid_data[robot_row][robot_col].type = 'empty'
             self.robot_positions[i] = (move_row, move_col)
-            self.grid_data[move_row][move_col] = 'robot'
+            self.grid_data[move_row][move_col].type = 'robot'
 
             #Check if it has reached its destination
             if self.robot_positions[i] == self.destination_positions[i]:
