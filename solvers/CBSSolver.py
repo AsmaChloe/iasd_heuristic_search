@@ -7,7 +7,7 @@ from solvers.parents.Solver import POSSIBLE_MOVES
 
 class AStarSolver(SAPFSolver):
     def __init__(self, environment, robot_pos, dest_pos, constraints=None):
-        SAPFSolver.__init__(self, environment, robot_pos, dest_pos)
+        SAPFSolver.__init__(self, environment, robot_pos, dest_pos, constraints=None)
         self.constraints = constraints or set()  # Set of constraints (time, pos, agent_id)
         self.parent = {}
         self.g_cost = {self.robot_pos: 0}
@@ -16,16 +16,6 @@ class AStarSolver(SAPFSolver):
 
     def heuristic(self, pos):
         return abs(pos[0] - self.dest_pos[0]) + abs(pos[1] - self.dest_pos[1])
-
-    def is_valid(self, pos, time_step):
-        if 0 <= pos[0] < self.environment.window.rows and \
-           0 <= pos[1] < self.environment.window.cols and \
-           self.environment.grid_data[pos[0]][pos[1]].type != 'obstacle':
-            for (t, p, agent_id) in self.constraints:
-                if t == time_step and p == pos:
-                    return False
-            return True
-        return False
 
     def solve(self):
         queue = []
@@ -80,11 +70,13 @@ class CBSSolver:
         for agent_id, (start_pos, dest_pos, _) in enumerate(self.agents):
             solver = AStarSolver(self.environment, start_pos, dest_pos, constraints=self.constraints)
             path, _ = solver.solve()
-            all_paths.append(path)
-
             if path is None :
+                all_paths.append([])
                 self.environment.robot_found_destination[agent_id] = True
                 print(f"No path found for agent {agent_id}")
+            else :
+                all_paths.append(path)
+
         return all_paths
 
     def solve(self):

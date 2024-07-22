@@ -36,16 +36,14 @@ class DijkstraSolver(SAPFSolver):
                 potential_pos = (current_pos[0] + move[0], current_pos[1] + move[1])
 
                 #If valid position
-                if 0 <= potential_pos[0] < self.environment.window.rows and \
-                   0 <= potential_pos[1] < self.environment.window.cols and \
-                   self.environment.grid_data[potential_pos[0]][potential_pos[1]].type != 'obstacle' and \
-                   not self.visited[potential_pos[0]][potential_pos[1]]:
+                if self.is_valid(potential_pos) :
+                   if not self.visited[potential_pos[0]][potential_pos[1]]:
 
-                    tentative_g_cost = self.g_cost[current_pos] + 1
+                        tentative_g_cost = self.g_cost[current_pos] + 1
 
-                    if potential_pos not in self.g_cost or tentative_g_cost < self.g_cost[potential_pos]:
-                        self.g_cost[potential_pos] = tentative_g_cost
-                        queue.append(potential_pos)
-                        self.parent[potential_pos] = current_pos
+                        if potential_pos not in self.g_cost or tentative_g_cost < self.g_cost[potential_pos]:
+                            self.g_cost[potential_pos] = tentative_g_cost
+                            queue.append(potential_pos)
+                            self.parent[potential_pos] = current_pos
 
         return None, None

@@ -15,9 +15,7 @@ class RandomSolver(SAPFSolver):
       potential_pos = (self.robot_pos[0] + move[0],
                        self.robot_pos[1] + move[1], move[2])
 
-      if potential_pos[0] >= 0 and potential_pos[0] < self.environment.window.rows \
-      and potential_pos[1] >= 0 and potential_pos[1] < self.environment.window.cols \
-      and self.environment.grid_data[potential_pos[0]][potential_pos[1]].type != 'obstacle':
+      if self.is_valid(potential_pos):
         potential_poss.append(potential_pos)
 
     output = None

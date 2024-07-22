@@ -47,11 +47,11 @@ class PriorityBasedSolver(MAPFSolver):
                     # print(f"Conflict between agents {agent_id} and {conflict_agent_id} at position {pos} ")
 
                     if priority > conflict_priority:
-                        # print(f"\tAgent {agent_id} has lower priority and will stay at previous position")
-                        # The agent with lower priority will stay in its previous position
-                        # print(f"\t\tAvant : {current_positions=}")
+                        print(f"Agent {agent_id} waits at {previous_positions[agent_id]} for agent {conflict_agent_id} to move")
                         current_positions[agent_id] = previous_positions[agent_id]
-                        # print(f"\t\tApres : {current_positions=}")
+                    else:
+                        print(f"Agent {conflict_agent_id} waits at {previous_positions[conflict_agent_id]} for agent {agent_id} to move")
+                        current_positions[conflict_agent_id] = previous_positions[conflict_agent_id]
                 position_to_agent[pos] = agent_id
 
             # Store the final positions for this step

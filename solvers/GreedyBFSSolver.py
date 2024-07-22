@@ -40,12 +40,10 @@ class GreedyBFSSolver(SAPFSolver):
                                  current_pos[1] + move[1])
 
                 # Check if position is valid
-                if 0 <= potential_pos[0] < self.environment.window.rows and \
-                   0 <= potential_pos[1] < self.environment.window.cols and \
-                   self.environment.grid_data[potential_pos[0]][potential_pos[1]].type != 'obstacle' and \
-                   not self.visited[potential_pos[0]][potential_pos[1]]:
+                if self.is_valid(potential_pos) :
+                   if not self.visited[potential_pos[0]][potential_pos[1]]:
 
-                    queue.append((self.heuristic(potential_pos), potential_pos))
-                    self.parent[potential_pos] = current_pos
+                        queue.append((self.heuristic(potential_pos), potential_pos))
+                        self.parent[potential_pos] = current_pos
 
         return None, None
