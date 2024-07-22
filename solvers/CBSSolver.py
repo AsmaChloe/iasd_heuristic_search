@@ -54,7 +54,7 @@ class CBSSolver:
 
     def __init__(self, environment, agents):
         self.environment = environment
-        self.agents = agents  # List of tuples (start_pos, dest_pos, priority)
+        self.agents = agents
         self.agent_paths = []
         self.constraints = []
         self.open_list = []
@@ -67,12 +67,15 @@ class CBSSolver:
 
     def generate_paths(self):
         all_paths = []
-        for agent_id, (start_pos, dest_pos, _) in enumerate(self.agents):
+        for agent_id, agent in enumerate(self.agents) :
+            start_pos = agent.pos
+            dest_pos = agent.dest
+
             solver = AStarSolver(self.environment, start_pos, dest_pos, constraints=self.constraints)
             path, _ = solver.solve()
             if path is None :
                 all_paths.append([])
-                self.environment.robot_found_destination[agent_id] = True
+                agent.found_destination = True
                 print(f"No path found for agent {agent_id}")
             else :
                 all_paths.append(path)
@@ -93,6 +96,7 @@ class CBSSolver:
             paths = self.generate_paths()
             if paths is None:
                 continue
+
             # Check for conflicts
             conflicts = self.check_conflicts(paths)
             if not conflicts:
@@ -123,7 +127,7 @@ class CBSSolver:
                     if pos in position_to_agent:
                         # Conflict detected
                         other_agent_id = position_to_agent[pos]
-                        if self.agents[agent_id][2] > self.agents[other_agent_id][2]:
+                        if self.agents[agent_id].priority > self.agents[other_agent_id].priority:
                             conflicts.append((time_step, pos, agent_id))
                         else:
                             conflicts.append((time_step, pos, other_agent_id))
