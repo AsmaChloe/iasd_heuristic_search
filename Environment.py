@@ -24,7 +24,7 @@ class Environment:
                           for _ in range(self.window.rows)]
 
         if obstacle_density is None:
-            obstacle_density = self.window.rows / 100.0
+            obstacle_density = self.window.rows / 100.0 + 0.1
         self.place_obstacles(obstacle_density)
         self.place_robots_and_destinations(num_robots)
 
@@ -34,9 +34,11 @@ class Environment:
         if self.solver_class == SolverTypeEnum.PRIORITY_BASED or self.solver_class == SolverTypeEnum.CONFLICT_BASED:
             self.solver = self.solver_class.solver_class(self, self.agents)
 
-            optimal_paths = self.solver.solve()
+            optimal_paths, compute_time = self.solver.solve()
+            print(f"Compute time: {compute_time} ns")
             for i, agent in enumerate(self.agents):
                 agent.optimal_path = optimal_paths[i]
+
         # Start moving robots
         self.move_robots()
 

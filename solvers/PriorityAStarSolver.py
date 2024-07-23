@@ -31,6 +31,7 @@ class PriorityAStarSolver(SAPFSolver):
 
     def solve(self):
         optimal_paths = []
+        start_time = time.time_ns()
 
         # Sort agents by priority in descending order (highest priority first)
         self.agents.sort(key=lambda agent: agent.priority, reverse=True)
@@ -45,7 +46,8 @@ class PriorityAStarSolver(SAPFSolver):
                 print(f"Agent with priority {agent.priority} could not find a path.")
                 optimal_paths.append([])  # Append an empty path if no path is found
 
-        return optimal_paths
+        self.compute_time = time.time_ns() - start_time
+        return optimal_paths, self.compute_time
 
     def find_path(self, agent):
         queue = []

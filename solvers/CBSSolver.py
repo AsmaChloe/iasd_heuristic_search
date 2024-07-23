@@ -83,6 +83,7 @@ class CBSSolver:
         return all_paths
 
     def solve(self):
+        start_time = time.time_ns()
         initial_cost = sum(len(self.generate_paths()[i]) for i in range(len(self.agents)))
         self.open_list.append((initial_cost, []))
         self.best_cost = float('inf')
@@ -113,7 +114,8 @@ class CBSSolver:
                         heapq.heappush(self.open_list, (new_cost, new_constraints))
                         self.closed_list.add((new_cost, new_constraints_str))
 
-        return self.agent_paths
+        self.compute_time = time.time_ns() - start_time
+        return self.agent_paths, self.compute_time
 
     def check_conflicts(self, paths):
         conflicts = []
